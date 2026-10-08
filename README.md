@@ -62,11 +62,13 @@ Publish a release build:
 dotnet publish heicon.csproj -c Release -p:Platform=x64 -p:PublishProfile=win-x64.pubxml
 ```
 
-The output is written to `bin\Release\net8.0-windows10.0.19041.0\win-x64\publish\`. Use `x86` / `win-x86` or `ARM64` / `win-arm64` for the other architectures.
+The output is a single `heicon.exe` in `bin\Release\net8.0-windows10.0.19041.0\win-x64\publish\`. Use `x86` / `win-x86` or `ARM64` / `win-arm64` for the other architectures.
 
 ### Distributing
 
-Heicon builds as an **unpackaged, self-contained** app: the publish folder includes the .NET runtime and the Windows App SDK, so it runs on any supported PC without installing anything. To distribute it, copy (or zip) the **entire publish folder**; `heicon.exe` needs the files next to it.
+Heicon publishes as a **single, self-contained `heicon.exe`**: the .NET runtime, the Windows App SDK, and the HEIC decoder are all bundled inside it, so it runs on any supported PC without installing anything. To distribute it, just copy the exe.
+
+On its first launch, the exe unpacks its bundled files to `%TEMP%\.net\heicon\` (about 150 MB), which takes a few seconds; later launches reuse them and start quickly. To unpack somewhere else, set the `DOTNET_BUNDLE_EXTRACT_BASE_DIR` environment variable.
 
 Release builds are trimmed to reduce their size. If you switch between Debug and Release builds or change packaging settings and the app fails to start, run **Build → Clean Solution** (or delete the `bin` and `obj` folders) and build again.
 
